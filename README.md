@@ -1,2 +1,3 @@
 # Storefront
-Django, D
+Django, DRF
+
