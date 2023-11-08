@@ -1,8 +1,15 @@
 from django.db import models
 
 
+class Promotions(models.Model):
+    description = models.CharField(max_length=255)
+    discount = models.FloatField()
+
+
 class Collection(models.Model):
     title = models.CharField(max_length=255)
+    features_product = models.ForeignKey(
+        'Product',on_delete=models.SET_NULL, null= True, related_name='+')
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
@@ -11,7 +18,10 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=6 , decimal_places=2)
     inventory_type = models.IntegerField()
     last_updated = models.DateTimeField(auto_now=True)
+    # for one to mant relationships we use ForeignKey.
     collections = models.ForeignKey(Collection, on_delete=models.PROTECT,)
+    promothions = models.ManyToManyField(Promotions)
+    
 
 class Customer(models.Model):
     MEMBERSHIP_BRONZE = 'B'
@@ -56,7 +66,7 @@ class OrderItem(models.Model):
 class Address(models.Model):
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
-    customer = models.OneToOneField(Customer,on_delete=models.CASCADE, primary_key=True)
+    customer = models.ForeignKey(Customer,on_delete=models.CASCADE)
 
 class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
