@@ -14,6 +14,7 @@ class Collection(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
+    slug = models.SlugField()
     #9999.99
     price = models.DecimalField(max_digits=6 , decimal_places=2)
     inventory_type = models.IntegerField()
@@ -38,7 +39,7 @@ class Customer(models.Model):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True)
-    membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, defualt=MEMBERSHIP_BRONZE)
+    membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
 
 
 class Order(models.Model):

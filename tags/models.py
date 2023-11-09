@@ -10,6 +10,6 @@ class TaggedItem(models.Model):
     # What tag applied to what object.
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     # Defined generic relationship.
-    product = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey()
