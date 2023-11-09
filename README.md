@@ -1,3 +1,3 @@
 # Storefront
-Django, DRF
+Django, DRF, MySQL
 
