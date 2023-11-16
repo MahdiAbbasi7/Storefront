@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
-from store.models import Product, OrderItem, Customer
+from store.models import Product, OrderItem, Order
 
 def say_hello(request):
     query_set = Product.objects.all()
@@ -23,5 +23,7 @@ def debug(request):
     
     # selected_related uses for one to one and foreignkeys.
     # prefetch_related uses for many to many and reverse foreignkeys.
-    
+    # Get the last 5 orders with their customer and itmes (inc product)
+    query_set = Order.objects.select_related('customer').order_by('-placed_at')[:5]
+
     return render(request, 'sqll.html', {'products': list(query_set)})

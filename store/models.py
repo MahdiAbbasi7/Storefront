@@ -58,6 +58,7 @@ class Order(models.Model):
     customer = models.ForeignKey(Customer,on_delete=models.PROTECT)
 
 class OrderItem(models.Model):
+    # for reverse relationship this name is conventions orderitem_set.(related_name)
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField()
