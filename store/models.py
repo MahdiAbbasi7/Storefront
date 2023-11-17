@@ -15,6 +15,7 @@ class Collection(models.Model):
 
     class Meta:
         ordering = ['title']
+        # you can handle this in admin file.
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
