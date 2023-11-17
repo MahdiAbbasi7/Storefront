@@ -4,9 +4,15 @@ from . import models
 # admin.site.register(models.Product, ProductAdmin)
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title', 'price', 'inventory_status']
+    list_display = ['title', 'price', 
+                    'inventory_status', 'collections',]
     list_editable = ['price']
     list_per_page = 15
+    # for optimaize performance use select_related for increase queries.
+    list_select_related = ['collections']
+
+    def collections(self, product):
+        return product.collections.title
 
     @admin.display(ordering='inventory')
     def inventory_status(self, product):
@@ -26,3 +32,9 @@ class CollectionAdmin(admin.ModelAdmin):
     list_display = ['title']
     list_per_page = 15
     ordering = ['title']
+
+
+@admin.register(models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'placed_at', 'customer']
+
