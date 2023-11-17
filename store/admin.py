@@ -1,8 +1,24 @@
+from typing import Any
 from django.db.models import Count
 from django.contrib import admin
+from django.db.models.query import QuerySet
 from django.urls import reverse
 from django.utils.html import format_html , urlencode
 from . import models
+
+class InventoryFilter(admin.SimpleListFilter):
+    title = 'inventory'
+    parameter_name = 'inventory'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('<10', 'Low')
+        ]
+    
+    def queryset(self, request: Any, queryset: QuerySet[Any]):
+        if self.value() == '<10':
+            return queryset.filter(inventory__lt=10)
+
 
 # admin.site.register(models.Product, ProductAdmin)
 @admin.register(models.Product)
@@ -13,6 +29,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_per_page = 15
     # for optimaize performance use select_related for increase queries.
     list_select_related = ['collections']
+    list_filter = ['collections', 'last_updated', InventoryFilter]
 
     def collections(self, product):
         return product.collections.title
