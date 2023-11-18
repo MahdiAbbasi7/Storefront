@@ -23,6 +23,7 @@ class InventoryFilter(admin.SimpleListFilter):
 # admin.site.register(models.Product, ProductAdmin)
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
+    search_fields = ['title']
     autocomplete_fields=['collections']
     prepopulated_fields={
         'slug':['title'],
@@ -98,7 +99,16 @@ class CollectionAdmin(admin.ModelAdmin):
             products_count=Count('product')
         )
 
+
+class OrderItemInline(admin.TabularInline):
+    autocomplete_fields = ['product']
+    model = models.OrderItem
+    min_num = 1
+    max_num = 10
+    extra = 1
+
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
+    inlines = [OrderItemInline]
     autocomplete_fields = ['customer']
     list_display = ['id', 'placed_at', 'customer']

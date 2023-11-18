@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.validators import MinValueValidator
 
 class Promotions(models.Model):
     description = models.CharField(max_length=255)
@@ -22,12 +22,16 @@ class Product(models.Model):
     description = models.TextField()
     slug = models.SlugField()
     #9999.99
-    price = models.DecimalField(max_digits=6 , decimal_places=2)
+    price = models.DecimalField(
+        max_digits=6, 
+        decimal_places=2, 
+        validators= [MinValueValidator(1, message='Price is not in range.')])
+    
     inventory_type = models.IntegerField()
     last_updated = models.DateTimeField(auto_now=True)
     # for one to mant relationships we use ForeignKey.
     collections = models.ForeignKey(Collection, on_delete=models.PROTECT,)
-    promothions = models.ManyToManyField(Promotions)
+    promothions = models.ManyToManyField(Promotions, blank=True)
 
     def __str__(self) -> str:
         return self.title
