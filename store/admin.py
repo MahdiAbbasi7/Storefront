@@ -1,6 +1,6 @@
 from typing import Any
 from django.db.models import Count
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db.models.query import QuerySet
 from django.urls import reverse
 from django.utils.html import format_html , urlencode
@@ -23,6 +23,7 @@ class InventoryFilter(admin.SimpleListFilter):
 # admin.site.register(models.Product, ProductAdmin)
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
+    actions=['clear_inventory']
     list_display = ['title', 'price', 
                     'inventory_status', 'collections',]
     list_editable = ['price']
@@ -40,6 +41,15 @@ class ProductAdmin(admin.ModelAdmin):
             return 'LOW'
         return 'OK'
     
+    @admin.action(description='Clear inventorty')
+    def clear_inventory(self, request, queryset):
+        updated_count=queryset.update(inventory=0)
+        self.message_user(
+            request,
+            f'{updated_count} products were successfully updated.',
+            messages.ERROR
+        )
+
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'membership', 'orders']
@@ -58,7 +68,6 @@ class CustomerAdmin(admin.ModelAdmin):
             })
             )
         return format_html('<a href="{}">{}</a>', url, customer.orders)
-
 
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
