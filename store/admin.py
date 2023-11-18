@@ -23,6 +23,10 @@ class InventoryFilter(admin.SimpleListFilter):
 # admin.site.register(models.Product, ProductAdmin)
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
+    autocomplete_fields=['collections']
+    prepopulated_fields={
+        'slug':['title'],
+    }
     actions=['clear_inventory']
     list_display = ['title', 'price', 
                     'inventory_status', 'collections',]
@@ -71,6 +75,7 @@ class CustomerAdmin(admin.ModelAdmin):
 
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
+    search_fields= ['title']
     list_display = ['title', 'products_count']
     list_per_page = 15
     ordering = ['title']
@@ -95,4 +100,5 @@ class CollectionAdmin(admin.ModelAdmin):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['customer']
     list_display = ['id', 'placed_at', 'customer']
