@@ -3,7 +3,8 @@ from django.contrib import admin, messages
 from django.db.models import Count
 from django.db.models.query import QuerySet
 from django.urls import reverse
-from django.utils.html import format_html , urlencode
+from django.utils.html import format_html
+from urllib.parse import urlencode
 from . import models
 
 class InventoryFilter(admin.SimpleListFilter):
@@ -66,13 +67,13 @@ class CustomerAdmin(admin.ModelAdmin):
 
     @admin.display(ordering='orders')
     def orders(self, customer):
-        url = reverse(
-            'admin:store_orderـchangelist'
-            +'?'
+        url = (
+            reverse('admin:store_order_changelist')
+            + '?'
             + urlencode({
                 'customer__id':str(customer.id)
-            })
-            )
+            }))
+        
         return format_html('<a href="{}">{}</a>', url, customer.orders)
 
 @admin.register(models.Collection)
@@ -85,12 +86,12 @@ class CollectionAdmin(admin.ModelAdmin):
     @admin.display(ordering='products_count')
     def products_count(self, collection):
         # reverse('admin:app_model_page')
-        url=reverse(
-            'admin:store_product_changelist' 
-            +'?'
+        url=(
+            reverse('admin:store_product_changelist')
+            + '?'
             + urlencode({
-                 'collection__id': str(collection.id)
-             }))
+                'collection__id': str(collection.id)
+            }))
         
         return format_html('<a href="{}">{}</a>', url, collection.products_count)
         
@@ -102,7 +103,7 @@ class CollectionAdmin(admin.ModelAdmin):
 
 
 class OrderItemInline(admin.TabularInline):
-    autocomplete_fields = ['product']
+    autocomplete_fifelds = ['product']
     model = models.OrderItem
     min_num = 1
     max_num = 10
