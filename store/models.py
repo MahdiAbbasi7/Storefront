@@ -6,7 +6,7 @@ class Promotions(models.Model):
     discount = models.FloatField()
 
 
-class Collection(models.Model):
+class  Collection(models.Model):
     title = models.CharField(max_length=255)
     features_product = models.ForeignKey(
         'Product',on_delete=models.SET_NULL, null= True, related_name='+')
@@ -30,7 +30,7 @@ class Product(models.Model):
     inventory_type = models.IntegerField()
     last_updated = models.DateTimeField(auto_now=True)
     # for one to mant relationships we use ForeignKey.
-    collections = models.ForeignKey(Collection, on_delete=models.PROTECT,)
+    collections = models.ForeignKey(Collection, on_delete=models.PROTECT,related_name='products')
     promothions = models.ManyToManyField(Promotions, blank=True)
 
     def __str__(self) -> str:
