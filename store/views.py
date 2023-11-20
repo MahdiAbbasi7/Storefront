@@ -18,15 +18,8 @@ def product_list(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def product_detail(request,id):
-    # try : 
-    #     product = Product.objects.get(pk=id)
-    #     serializer = ProductSerializer(product)
-    #     return Response(serializer.data)
-    # except Product.DoesNotExist:
-    #     return Response(status=status.HTTP_404_NOT_FOUND)
-    # THE BETTER WAY IS :
     product = get_object_or_404(Product, pk=id)
     if request.method ==  'GET':
         serializer = ProductSerializer(product)
@@ -36,6 +29,11 @@ def product_detail(request,id):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    elif request.method == 'DELETE':
+        if product.orderitems.count() > 0:
+            return Response({'error': 'Product cannot be deleted'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view()
 def collection_detail(request,pk):
