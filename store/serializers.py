@@ -11,12 +11,10 @@ class CollectionSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'title', 'inventory_type','collections','price', 'price_with_tax']
+        fields = ['id', 'title', 'slug','inventory_type','collections',
+                  'price', 'price_with_tax', 'description']
 
     price_with_tax = serializers.SerializerMethodField(method_name='calculate_price_with_tax')
-    collections = serializers.HyperlinkedRelatedField(
-        view_name='collections-detail',
-        queryset = Collection.objects.all()
-    )
+    
     def calculate_price_with_tax(self,product: Product):
         return product.price * Decimal(1.1)
