@@ -9,6 +9,7 @@ mysqlclient = "==2.1.1"
 djangorestframework = "*"
 markdown = "*"
 django-filter = "*"
+drf-nested-routers = "*"
 
 [dev-packages]
 
