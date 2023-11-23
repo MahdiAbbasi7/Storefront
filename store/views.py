@@ -11,9 +11,15 @@ from .serializers import ProductSerializer, CollectionSerializer , ReveiwSeriali
 
 
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        collection_id = self.request.query_params.get('collection_id', 'IS NOT EXIST')
+        if collection_id is not None:
+            queryset =  queryset.filter(collections_id=collection_id)
+        return queryset
+
     def get_serializer_context(self):
         return {'request': self.request}
     
