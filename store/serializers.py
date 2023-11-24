@@ -1,7 +1,8 @@
 from decimal import Decimal
 from rest_framework import serializers
-from .models import Product, Collection, Review
+from .models import CartItem, Product, Collection, Review, Cart
 from django.db.models import Count
+from uuid import uuid4
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -30,3 +31,38 @@ class ReveiwSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         product_id = self.context['product_id']
         return Review.objects.create(product_id=product_id, **validated_data)
+
+class SimpleProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'title','price']
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+    product = SimpleProductSerializer()
+    total_price = serializers.SerializerMethodField()
+
+    def get_total_price(self, cart_item: CartItem):
+        return cart_item.quantity * cart_item.product.price
+    
+    class Meta:
+        model = CartItem
+        fields = ['product', 'quantity', 'total_price']
+    
+class CartSerializer(serializers.ModelSerializer):
+    items = CartItemSerializer(many=True)
+    total_price = serializers.SerializerMethodField()
+
+    def get_total_price(self, cart):
+        return sum([item.quantity * item.product.price for item in cart.items.all() if item])
+
+    class Meta:
+        model = Cart
+        fields = ['id', 'items', 'total_price']
+        read_only_fields = ['id']
+
+            
+
+    def create(self, validated_data):
+        validated_data['id'] = uuid4()
+        return super().create(validated_data)
