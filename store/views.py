@@ -2,13 +2,14 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
-from rest_framework.mixins import CreateModelMixin, ListModelMixin, DestroyModelMixin,RetrieveModelMixin
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, \
+                                    DestroyModelMixin,RetrieveModelMixin, UpdateModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .filters import ProductFilter
-from .models import Product, Collection, OrderItem, Review, Cart, CartItem
-from .serializers import ProductSerializer, CollectionSerializer , \
+from .models import Customer, Product, Collection, OrderItem, Review, Cart, CartItem
+from .serializers import CustomerSerializer, ProductSerializer, CollectionSerializer , \
                         ReveiwSerializer, CartSerializer, \
                         CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer
 
@@ -81,3 +82,7 @@ class CartItemViewSet(ModelViewSet):
         return CartItem.objects \
                 .filter(cart_id=self.kwargs['cart_pk']) \
                 .select_related('product')
+    
+class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
