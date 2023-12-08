@@ -17,7 +17,10 @@ from .serializers import CustomerSerializer, ProductSerializer, CollectionSerial
                         ReveiwSerializer, CartSerializer, \
                         CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer
 
-
+from django.conf import settings
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from .models import Customer
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all() 
@@ -124,7 +127,6 @@ class OrderViewSet(ModelViewSet):
     def get_serializer_context(self):
         return {'user_id': self.request.user.id}
     
-
     def get_queryset(self):
         user = self.request.user
 
@@ -133,3 +135,11 @@ class OrderViewSet(ModelViewSet):
         (customer_id, created) = Customer.objects.only('id').get_or_create(user_id=user.id)
         return Order.objects.filter(customer_id=customer_id)
 
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_customer_for_new_user(sender, **kwargs):
+    if kwargs['created']:
+        Customer.objects.create(user = kwargs['instance'])
+    def ready(self) -> None:
+        import store.signals
+customer_id = Customer.objects.only('id').get(user.id)
