@@ -142,4 +142,4 @@ def create_customer_for_new_user(sender, **kwargs):
         Customer.objects.create(user = kwargs['instance'])
     def ready(self) -> None:
         import store.signals
-customer_id = Customer.objects.only('id').get(user.id)
+customer_id = Customer.objects.only('id').get(user_id=user.id)
