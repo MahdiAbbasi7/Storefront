@@ -95,7 +95,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     # for reverse relationship this name is conventions orderitem_set.(related_name)
-    order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name='items') # add relation to items
+    order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name='items') 
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='orderitems')
     quantity = models.PositiveSmallIntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)

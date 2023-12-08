@@ -115,18 +115,30 @@ class CustomerViewSet(ModelViewSet):
             return Response(serializer.data)
 
 class OrderViewSet(ModelViewSet):
-    serializer_class = OrderSerializer
-    # permission_classes =[IsAuthenticated]
+    http_method_names = ['get', 'patch', 'delete', 'head', 'options']
+
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            return [IsAdminUser()]
+        return [IsAuthenticated()]
+
+    def create(self, request, *args, **kwargs):
+        serializer = CreateOrderSerializer(
+                data=request.data, 
+                context={'user_id': self.request.user.id})
+        serializer.is_valid(raise_exception=True)
+        order = serializer.save()
+        serializer = OrderSerializer(order)
+        return Response(serializer.data)
+
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return CreateOrderSerializer
-        return OrderSerializer
-    
-    
-    def get_serializer_context(self):
-        return {'user_id': self.request.user.id}
-    
+        elif self.request.method == 'PATCH':
+            return UpdateOrderSerializer
+        return OrderSerializer    
+
     def get_queryset(self):
         user = self.request.user
 
@@ -134,12 +146,4 @@ class OrderViewSet(ModelViewSet):
             return Order.objects.all()
         (customer_id, created) = Customer.objects.only('id').get_or_create(user_id=user.id)
         return Order.objects.filter(customer_id=customer_id)
-
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_customer_for_new_user(sender, **kwargs):
-    if kwargs['created']:
-        Customer.objects.create(user = kwargs['instance'])
-    def ready(self) -> None:
-        import store.signals
-customer_id = Customer.objects.only('id').get(user_id=user.id)
+        
