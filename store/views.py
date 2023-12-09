@@ -12,8 +12,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 
 from store.permissions import IsAdminOrReadOnly
 from .filters import ProductFilter
-from .models import Customer, Product, Collection, OrderItem, Review, Cart, CartItem, Order
-from .serializers import CustomerSerializer, ProductSerializer, CollectionSerializer , \
+from .models import Customer, Product, Collection, OrderItem, ProductImage, Review, Cart, CartItem, Order
+from .serializers import CustomerSerializer, ProductImageSerializer, ProductSerializer, CollectionSerializer , \
                         ReveiwSerializer, CartSerializer, \
                         CartItemSerializer, AddCartItemSerializer, \
                         UpdateCartItemSerializer, OrderSerializer , \
@@ -150,3 +150,13 @@ class OrderViewSet(ModelViewSet):
         
         customer_id = Customer.objects.only('id').get(user_id=user.id)
         return Order.objects.filter(customer_id=customer_id)
+
+
+class ProductImageViewSet(ModelViewSet):
+    serializer_class = ProductImageSerializer
+
+    def get_serializer_context(self):
+        return {'product_id': self.kwargs['product_pk']}
+
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
