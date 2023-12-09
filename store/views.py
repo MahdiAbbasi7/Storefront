@@ -12,10 +12,12 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 
 from store.permissions import IsAdminOrReadOnly
 from .filters import ProductFilter
-from .models import Customer, Product, Collection, OrderItem, Review, Cart, CartItem
+from .models import Customer, Product, Collection, OrderItem, Review, Cart, CartItem, Order
 from .serializers import CustomerSerializer, ProductSerializer, CollectionSerializer , \
                         ReveiwSerializer, CartSerializer, \
-                        CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer
+                        CartItemSerializer, AddCartItemSerializer, \
+                        UpdateCartItemSerializer, OrderSerializer , \
+                        CreateOrderSerializer, UpdateOrderSerializer                     
 
 from django.conf import settings
 from django.dispatch import receiver
@@ -114,8 +116,9 @@ class CustomerViewSet(ModelViewSet):
             serializer.save()
             return Response(serializer.data)
 
+
 class OrderViewSet(ModelViewSet):
-    http_method_names = ['get', 'patch', 'delete', 'head', 'options']
+    http_method_names = ['get', 'post','patch', 'delete', 'head', 'options']
 
     def get_permissions(self):
         if self.request.method in ['PUT', 'PATCH', 'DELETE']:
@@ -144,6 +147,6 @@ class OrderViewSet(ModelViewSet):
 
         if user.is_staff:
             return Order.objects.all()
+        
         customer_id = Customer.objects.only('id').get(user_id=user.id)
         return Order.objects.filter(customer_id=customer_id)
-        

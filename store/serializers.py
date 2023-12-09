@@ -1,8 +1,10 @@
 from decimal import Decimal
-from rest_framework import serializers
-from .models import CartItem, Customer, Product, Collection, Review, Cart
-from django.db.models import Count
 from uuid import uuid4
+from django.db.models import Count
+from django.db import transaction
+from rest_framework import serializers
+from .signals import order_created
+from .models import CartItem, Customer, Product, Collection, Review, Cart, Order, OrderItem
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -108,7 +110,6 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer 
         fields = ['id', 'user_id', 'phone', 'birth_date', 'membership']
 
-   # for readability added item serializer
 class OrderItemSerializer(serializers.ModelSerializer):
     product = SimpleProductSerializer()
 
