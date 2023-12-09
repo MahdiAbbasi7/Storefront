@@ -14,11 +14,23 @@ class CollectionSerializer(serializers.ModelSerializer):
         
     products_count = serializers.IntegerField(read_only=True)
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        product_id = self.context['product_id']
+        return ProductImage.objects.create(product_id=product_id, **validated_data)
+
+    class Meta:
+        model = ProductImage
+        fields = ['id','image']
+
+
 class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(read_only=True, many=True)
+
     class Meta:
         model = Product
         fields = ['id', 'title', 'slug','inventory_type','collections',
-                  'price', 'price_with_tax', 'description']
+                  'price', 'price_with_tax', 'description', 'images']
 
     price_with_tax = serializers.SerializerMethodField(method_name='calculate_price_with_tax')
     
@@ -163,12 +175,3 @@ class CreateOrderSerializer(serializers.Serializer):
             order_created.send_robust(self.__class__, order=order)
 
             return order
-        
-class ProductImageSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        product_id = self.context['product_id']
-        return ProductImage.objects.create(product_id=product_id, **validated_data)
-
-    class Meta:
-        model = ProductImage
-        fields = ['id','image']
