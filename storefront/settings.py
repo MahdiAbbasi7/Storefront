@@ -186,4 +186,8 @@ EMAIL_HOST = 'localhost'
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 2525
-DEFAULT_FROM_EMAIL = 'storefront@uni.com'
+DEFAULT_FROM_EMAIL = 'abbasimahdi782@gmail.com'
+
+ADMINS = [
+    ('Mahdi', 'abbasimahdi782@gmail.com')
+]

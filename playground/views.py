@@ -1,10 +1,18 @@
 from django.http import BadHeaderError
 from django.shortcuts import render
-from django.core.mail import mail_admins, send_mail
+from django.core.mail import mail_admins, send_mail , EmailMessage
+from templated_mail.mail import BaseEmailMessage
+
 
 def say_hello(request):
     try:
-        send_mail('subject', 'message', 'storefront@uni.com', ['test@mahdi.com'])
+        message = BaseEmailMessage(
+            template_name = 'emails/first.html',
+            context = {'name': 'Mahdi'}
+        )
+        message.send(['alihdada@test.com'])
+        
+        # mail_admins('subject', 'message', html_message='message')
     except BadHeaderError:
         raise BadHeaderError('This is bad method!')
     return render(request, 'hello.html', {'name': 'Mahdi'})

@@ -4,5 +4,5 @@ from . import views
 # Urlconfig
 urlpatterns = [
     path('hello/',views.say_hello, name='say_hello'),
-    path('sql/', views.debug, name='debug'),
+    # path('sql/', views.debug, name='debug'),
 ]
