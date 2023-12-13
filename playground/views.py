@@ -2,19 +2,21 @@ from django.http import BadHeaderError
 from django.shortcuts import render
 from django.core.mail import mail_admins, send_mail , EmailMessage
 from templated_mail.mail import BaseEmailMessage
+from playground.tasks import notify_customers
 
 
 def say_hello(request):
-    try:
-        message = BaseEmailMessage(
-            template_name = 'emails/first.html',
-            context = {'name': 'Mahdi'}
-        )
-        message.send(['alihdada@test.com'])
+    notify_customers.delay('hellooo')
+    # try:
+    #     message = BaseEmailMessage(https://meet.google.com/yom-fkbp-cji
+    #         template_name = 'emails/first.html',
+    #         context = {'name': 'Mahdi'}
+    #     )
+    #     message.send(['alihdada@test.com'])
         
-        # mail_admins('subject', 'message', html_message='message')
-    except BadHeaderError:
-        raise BadHeaderError('This is bad method!')
+    #     # mail_admins('subject', 'message', html_message='message')
+    # except BadHeaderError:
+    #     raise BadHeaderError('This is bad method!')
     return render(request, 'hello.html', {'name': 'Mahdi'})
 
 # def debug(request):
