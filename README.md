@@ -1,2 +1,2 @@
 # Storefront
-### Django, DRF, MariaDB
+### Django, DRF, MariaDB, Redis, Celery
