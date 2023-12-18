@@ -23,6 +23,7 @@ pytest = "*"
 [dev-packages]
 pytest-django = "*"
 model-bakery = "*"
+locust = "*"
 
 [requires]
 python_version = "3.8"
