@@ -229,7 +229,8 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
-            'class': 'logging.StreamHandler'
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
         },
         'file': {
             'class': 'logging.FileHandler',
