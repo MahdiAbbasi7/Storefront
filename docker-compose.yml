@@ -1,0 +1,79 @@
+version: '3.9'
+services:
+  web:
+    build: .
+    command: ./wait-for-it.sh mariadb:3306 -- ./docker-entrypoint.sh
+    ports:
+      - 8000:8000
+    depends_on:
+      - redis
+      - mariadb
+    restart: on-failure
+    volumes:
+      - .:/app
+  mariadb:
+    image: mariadb:10.6.12
+    # command: mariadb
+    ports:
+      - 3307:3306
+    restart: always
+    environment:
+      - MARIADB_DATABASE=storefront2
+      - MARIADB_ROOT_PASSWORD=1
+      - MARIADB_USER=root
+      # - MARIADB_PASSWORD=1
+    volumes:
+      - mysqldata:/var/lib/mysql     
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - 6379:6379
+    restart: always
+    volumes:
+      - redisdata:/data
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    ports:
+      - 5000:80
+      - 2525:25
+    restart: always
+  celery:
+    build: .
+    command: celery -A storefront worker --loglevel=info
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+  celery-beat:
+    build: .
+    command: celery -A storefront beat --loglevel=info
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+  flower:
+    build: .
+    command: celery -A storefront flower
+    depends_on:
+      - web
+      - redis
+      - celery
+    environment:
+      - DEBUG=1
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    ports:
+      - 5555:5555
+  tests:
+    build: .
+    command: ./wait-for-it.sh mariadb:3306 -- ptw
+    depends_on:
+      - redis
+      - mariadb
+    tty: true
+    volumes:
+      - .:/app
+volumes:
+  mysqldata:
+  pgdata:
+  redisdata:
