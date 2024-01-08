@@ -9,7 +9,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'storefront2',
-        'HOST': 'mariadb',
+        'HOST': 'srv-captain--mariadb',
         'USER': 'root',
         'PASSWORD': '1',
     }
