@@ -23,4 +23,5 @@ COPY . /app/
 # Expose port 8000 on the container
 EXPOSE 8000
 # start server  
+CMD docker-compose down
 CMD ./wait-for-it.sh mariadb:3306 -- ./docker-entrypoint.sh
