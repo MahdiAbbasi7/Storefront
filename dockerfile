@@ -22,3 +22,5 @@ COPY . /app/
 
 # Expose port 8000 on the container
 EXPOSE 8000
+# start server  
+CMD python manage.py runserver  0.0.0.0
