@@ -4,7 +4,7 @@ from .common import *
 DEBUG = True
 
 SECRET_KEY = 'django-insecure-e6n(603gj-%f^_%^opggn^xyxus@-d@zk=w7jix1)@9l=hlc#$'
-
+ALLOWED_HOSTS = ["www.alihaddadi.sadrazkh.ir","193.164.4.226"]
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
