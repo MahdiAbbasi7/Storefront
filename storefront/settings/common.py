@@ -87,10 +87,7 @@ INTERNAL_IPS = [
     # ...
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8001",
-    'htttp://localhost:8000',
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'storefront.urls'
 
