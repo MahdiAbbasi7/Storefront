@@ -160,7 +160,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.User'
 
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/reset_password/confirm/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': '#/reset_password_confirm/{uid}/{token}',
     'SERIALIZERS':{
         'user_create': 'core.serializers.UserCreateSerializer',
         'current_user': 'core.serializers.UserSerializer',        
