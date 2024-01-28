@@ -6,7 +6,7 @@ Storefront is a RESTful Store build with Django and Django Rest Framework.
 
 ## Installation
 
-Clone the project
+Clone the project:
 
 ```bash
     git clone https://github.com/MahdiAbbasi7/Storefront.git
